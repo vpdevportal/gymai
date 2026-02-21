@@ -1,0 +1,74 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "APP_ENV",
+    "API_BASE_URL"
+  ],
+  "tasks": {
+    "app#build:web": {
+      "dependsOn": [
+        "app#codegen"
+      ],
+      "outputs": [
+        "apps/app/build/web/**"
+      ]
+    },
+    "app#build:ios": {
+      "dependsOn": [
+        "app#codegen"
+      ],
+      "outputs": [
+        "apps/app/build/ios/**"
+      ]
+    },
+    "app#build:android": {
+      "dependsOn": [
+        "app#codegen"
+      ],
+      "outputs": [
+        "apps/app/build/app/**"
+      ]
+    },
+    "app#build:macos": {
+      "dependsOn": [
+        "app#codegen"
+      ],
+      "outputs": [
+        "apps/app/build/macos/**"
+      ]
+    },
+    "app#codegen": {
+      "inputs": [
+        "apps/app/lib/**/*.dart",
+        "apps/app/pubspec.yaml"
+      ],
+      "outputs": [
+        "apps/app/lib/**/*.g.dart",
+        "apps/app/lib/**/*.freezed.dart"
+      ]
+    },
+    "app#analyze": {
+      "dependsOn": [
+        "app#codegen"
+      ],
+      "cache": false
+    },
+    "app#test": {
+      "dependsOn": [
+        "app#codegen"
+      ],
+      "outputs": [
+        "apps/app/coverage/**"
+      ]
+    },
+    "backend#dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "backend#test": {
+      "outputs": [
+        "apps/backend/.pytest_cache/**"
+      ]
+    }
+  }
+}
