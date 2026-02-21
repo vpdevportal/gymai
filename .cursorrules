@@ -1,0 +1,24 @@
+# GymAI Project Rules
+
+## Always Include in Context
+
+When working on this project, ALWAYS reference and keep in context these documentation files:
+
+1. `documentation/FUNCTIONALITIES.md` - Contains all feature requirements, user roles, MVP phases, and functional specifications
+2. `documentation/TECHNICAL.md` - Contains technical requirements, framework options, architecture decisions, and deployment strategies
+
+These files provide the complete context for:
+- Understanding feature requirements
+- Making technical decisions
+- Planning implementation
+- Selecting appropriate technologies
+- Understanding deployment strategies
+
+## Project Context
+
+This is a cross-platform mobile application (GymAI) for gym and workout management with AI-powered features. Always refer to the documentation files for:
+- Feature specifications and requirements
+- Technical stack recommendations
+- Architecture decisions
+- Implementation guidelines
+

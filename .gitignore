@@ -1,0 +1,65 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code
+#.vscode/
+
+# ── Flutter / Dart ─────────────────────────────────────────────────
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+apps/app/build/
+apps/app/coverage/
+
+# Symbolication
+app.*.symbols
+
+# Obfuscation
+app.*.map.json
+
+# Android Studio artifacts
+apps/app/android/app/debug
+apps/app/android/app/profile
+apps/app/android/app/release
+
+# Flutter env
+apps/app/.env
+
+# ── Python Backend ─────────────────────────────────────────────────
+apps/backend/.venv/
+apps/backend/.env
+apps/backend/__pycache__/
+apps/backend/**/__pycache__/
+apps/backend/*.pyc
+apps/backend/*.pyo
+apps/backend/.pytest_cache/
+apps/backend/.mypy_cache/
+apps/backend/*.egg-info/
+apps/backend/dist/
+apps/backend/*.db
+
+# ── Node / Turborepo ───────────────────────────────────────────────
+node_modules/
+.turbo/
+.cache/
+npm-debug.log*
