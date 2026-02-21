@@ -1,0 +1,14 @@
+{
+    "name": "app",
+    "private": true,
+    "scripts": {
+        "codegen": "flutter pub get && dart run build_runner build --delete-conflicting-outputs",
+        "analyze": "flutter analyze --no-pub",
+        "test": "flutter test",
+        "build:web": "flutter build web --release --web-renderer canvaskit",
+        "build:ios": "flutter build ipa --release",
+        "build:android": "flutter build appbundle --release",
+        "build:macos": "flutter build macos --release",
+        "dev": "flutter run"
+    }
+}
