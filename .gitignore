@@ -45,13 +45,6 @@ apps/app/android/app/release
 # Flutter env
 apps/app/.env
 
-# Firebase Config generated
-apps/app/ios/Runner/GoogleService-Info.plist
-apps/app/macos/Runner/GoogleService-Info.plist
-apps/app/android/app/google-services.json
-apps/app/lib/firebase_options.dart
-apps/app/lib/core/config/firebase_options.dart
-
 # ── Python Backend ─────────────────────────────────────────────────
 apps/backend/.venv/
 apps/backend/.env
