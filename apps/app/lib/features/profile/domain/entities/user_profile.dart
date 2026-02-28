@@ -8,6 +8,6 @@ abstract class UserProfile with _$UserProfile {
     required String userId,
     double? height,
     double? weight,
-    int? age,
+    DateTime? dateOfBirth,
   }) = _UserProfile;
 }

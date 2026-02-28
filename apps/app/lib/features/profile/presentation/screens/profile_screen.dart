@@ -19,42 +19,62 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   late TextEditingController _heightCtrl;
   late TextEditingController _weightCtrl;
-  late TextEditingController _ageCtrl;
+  DateTime? _selectedDob; // used during editing
 
   @override
   void initState() {
     super.initState();
     _heightCtrl = TextEditingController();
     _weightCtrl = TextEditingController();
-    _ageCtrl = TextEditingController();
   }
 
   @override
   void dispose() {
     _heightCtrl.dispose();
     _weightCtrl.dispose();
-    _ageCtrl.dispose();
     super.dispose();
   }
 
   void _startEditing(BodyMetrics metrics) {
     _heightCtrl.text = metrics.height?.toString() ?? '';
     _weightCtrl.text = metrics.weight?.toString() ?? '';
-    _ageCtrl.text = metrics.age?.toString() ?? '';
+    _selectedDob = metrics.dateOfBirth;
     setState(() => _editingMetrics = true);
   }
 
   Future<void> _saveMetrics() async {
     final height = double.tryParse(_heightCtrl.text);
     final weight = double.tryParse(_weightCtrl.text);
-    final age = int.tryParse(_ageCtrl.text);
 
     await ref.read(bodyMetricsProvider.notifier).update(
           height: height,
           weight: weight,
-          age: age,
+          dateOfBirth: _selectedDob,
         );
     setState(() => _editingMetrics = false);
+  }
+
+  Future<void> _pickDob() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDob ?? DateTime(now.year - 25),
+      firstDate: DateTime(1920),
+      lastDate: now,
+      helpText: 'Select Date of Birth',
+      builder: (context, child) => Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.dark(
+            primary: AppColors.primary,
+            onPrimary: Colors.white,
+            surface: AppColors.surface,
+            onSurface: AppColors.onBackground,
+          ),
+        ),
+        child: child!,
+      ),
+    );
+    if (picked != null) setState(() => _selectedDob = picked);
   }
 
   void _cancelEditing() => setState(() => _editingMetrics = false);
@@ -210,7 +230,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   metrics: metrics,
                   heightCtrl: _heightCtrl,
                   weightCtrl: _weightCtrl,
-                  ageCtrl: _ageCtrl,
+                  selectedDob: _selectedDob,
+                  onPickDob: _pickDob,
                 ),
 
                 const SizedBox(height: 24),
@@ -268,17 +289,31 @@ class _MetricsCard extends StatelessWidget {
     required this.metrics,
     required this.heightCtrl,
     required this.weightCtrl,
-    required this.ageCtrl,
+    required this.selectedDob,
+    required this.onPickDob,
   });
 
   final bool editing;
   final BodyMetrics metrics;
   final TextEditingController heightCtrl;
   final TextEditingController weightCtrl;
-  final TextEditingController ageCtrl;
+  final DateTime? selectedDob;
+  final VoidCallback onPickDob;
+
+  String _formatDob(DateTime? dob) {
+    if (dob == null) return '—';
+    return '${dob.day.toString().padLeft(2, '0')} / '
+        '${dob.month.toString().padLeft(2, '0')} / '
+        '${dob.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final dobDisplay = editing ? _formatDob(selectedDob) : _formatDob(metrics.dateOfBirth);
+    final ageDisplay = editing
+        ? (selectedDob != null ? _computeAge(selectedDob!) : null)
+        : metrics.age;
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -313,22 +348,86 @@ class _MetricsCard extends StatelessWidget {
             ],
           ),
           const _Divider(),
-          _MetricRow(
-            icon: Icons.cake_outlined,
-            label: 'Age',
-            unit: 'yrs',
-            value: metrics.age?.toString(),
-            editing: editing,
-            controller: ageCtrl,
-            inputType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(3),
-            ],
+          // Date of Birth row — tappable picker instead of text field
+          GestureDetector(
+            onTap: editing ? onPickDob : null,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  const Icon(Icons.cake_outlined, size: 18, color: AppColors.onSurfaceMuted),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Date of Birth',
+                    style: TextStyle(color: AppColors.onSurface, fontSize: 14),
+                  ),
+                  const Spacer(),
+                  if (editing)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceVariant,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.primary),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            dobDisplay,
+                            style: const TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          const Icon(Icons.edit_calendar_outlined,
+                              size: 14, color: AppColors.primary),
+                        ],
+                      ),
+                    )
+                  else
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          dobDisplay,
+                          style: TextStyle(
+                            color: metrics.dateOfBirth != null
+                                ? AppColors.onBackground
+                                : AppColors.onSurfaceMuted,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (ageDisplay != null)
+                          Text(
+                            '$ageDisplay years old',
+                            style: const TextStyle(
+                              color: AppColors.onSurfaceMuted,
+                              fontSize: 11,
+                            ),
+                          ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
+  }
+
+  int _computeAge(DateTime dob) {
+    final now = DateTime.now();
+    var years = now.year - dob.year;
+    if (now.month < dob.month ||
+        (now.month == dob.month && now.day < dob.day)) {
+      years--;
+    }
+    return years;
   }
 }
 

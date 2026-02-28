@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserProfileModel {
 
- String get userId; double? get height; double? get weight; int? get age;
+ String get userId; double? get height; double? get weight;@JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) DateTime? get dateOfBirth;
 /// Create a copy of UserProfileModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserProfileModelCopyWith<UserProfileModel> get copyWith => _$UserProfileModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfileModel&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.age, age) || other.age == age));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfileModel&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,height,weight,age);
+int get hashCode => Object.hash(runtimeType,userId,height,weight,dateOfBirth);
 
 @override
 String toString() {
-  return 'UserProfileModel(userId: $userId, height: $height, weight: $weight, age: $age)';
+  return 'UserProfileModel(userId: $userId, height: $height, weight: $weight, dateOfBirth: $dateOfBirth)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserProfileModelCopyWith<$Res>  {
   factory $UserProfileModelCopyWith(UserProfileModel value, $Res Function(UserProfileModel) _then) = _$UserProfileModelCopyWithImpl;
 @useResult
 $Res call({
- String userId, double? height, double? weight, int? age
+ String userId, double? height, double? weight,@JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) DateTime? dateOfBirth
 });
 
 
@@ -65,13 +65,13 @@ class _$UserProfileModelCopyWithImpl<$Res>
 
 /// Create a copy of UserProfileModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? height = freezed,Object? weight = freezed,Object? age = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? height = freezed,Object? weight = freezed,Object? dateOfBirth = freezed,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,height: freezed == height ? _self.height : height // ignore: cast_nullable_to_non_nullable
 as double?,weight: freezed == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
-as double?,age: freezed == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
-as int?,
+as double?,dateOfBirth: freezed == dateOfBirth ? _self.dateOfBirth : dateOfBirth // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -156,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  double? height,  double? weight,  int? age)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  double? height,  double? weight, @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson)  DateTime? dateOfBirth)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserProfileModel() when $default != null:
-return $default(_that.userId,_that.height,_that.weight,_that.age);case _:
+return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _:
   return orElse();
 
 }
@@ -177,10 +177,10 @@ return $default(_that.userId,_that.height,_that.weight,_that.age);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  double? height,  double? weight,  int? age)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  double? height,  double? weight, @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson)  DateTime? dateOfBirth)  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileModel():
-return $default(_that.userId,_that.height,_that.weight,_that.age);case _:
+return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +197,10 @@ return $default(_that.userId,_that.height,_that.weight,_that.age);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  double? height,  double? weight,  int? age)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  double? height,  double? weight, @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson)  DateTime? dateOfBirth)?  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileModel() when $default != null:
-return $default(_that.userId,_that.height,_that.weight,_that.age);case _:
+return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _:
   return null;
 
 }
@@ -212,13 +212,13 @@ return $default(_that.userId,_that.height,_that.weight,_that.age);case _:
 @JsonSerializable()
 
 class _UserProfileModel extends UserProfileModel {
-  const _UserProfileModel({required this.userId, this.height, this.weight, this.age}): super._();
+  const _UserProfileModel({required this.userId, this.height, this.weight, @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) this.dateOfBirth}): super._();
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) => _$UserProfileModelFromJson(json);
 
 @override final  String userId;
 @override final  double? height;
 @override final  double? weight;
-@override final  int? age;
+@override@JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) final  DateTime? dateOfBirth;
 
 /// Create a copy of UserProfileModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfileModel&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.age, age) || other.age == age));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfileModel&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,height,weight,age);
+int get hashCode => Object.hash(runtimeType,userId,height,weight,dateOfBirth);
 
 @override
 String toString() {
-  return 'UserProfileModel(userId: $userId, height: $height, weight: $weight, age: $age)';
+  return 'UserProfileModel(userId: $userId, height: $height, weight: $weight, dateOfBirth: $dateOfBirth)';
 }
 
 
@@ -253,7 +253,7 @@ abstract mixin class _$UserProfileModelCopyWith<$Res> implements $UserProfileMod
   factory _$UserProfileModelCopyWith(_UserProfileModel value, $Res Function(_UserProfileModel) _then) = __$UserProfileModelCopyWithImpl;
 @override @useResult
 $Res call({
- String userId, double? height, double? weight, int? age
+ String userId, double? height, double? weight,@JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) DateTime? dateOfBirth
 });
 
 
@@ -270,13 +270,13 @@ class __$UserProfileModelCopyWithImpl<$Res>
 
 /// Create a copy of UserProfileModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? height = freezed,Object? weight = freezed,Object? age = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? height = freezed,Object? weight = freezed,Object? dateOfBirth = freezed,}) {
   return _then(_UserProfileModel(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,height: freezed == height ? _self.height : height // ignore: cast_nullable_to_non_nullable
 as double?,weight: freezed == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
-as double?,age: freezed == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
-as int?,
+as double?,dateOfBirth: freezed == dateOfBirth ? _self.dateOfBirth : dateOfBirth // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

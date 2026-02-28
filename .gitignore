@@ -45,6 +45,15 @@ apps/app/android/app/release
 # Flutter env
 apps/app/.env
 
+# ── Firebase secrets (sensitive — keep local only) ──────────────────────────
+# Remove from tracking: git rm --cached <file>
+# These files contain API keys and must NOT be committed.
+apps/app/google-services.json
+apps/app/android/app/google-services.json
+apps/app/ios/Runner/GoogleService-Info.plist
+apps/app/macos/Runner/GoogleService-Info.plist
+apps/app/lib/core/config/firebase_options.dart
+
 # ── Python Backend ─────────────────────────────────────────────────
 apps/backend/.venv/
 apps/backend/.env

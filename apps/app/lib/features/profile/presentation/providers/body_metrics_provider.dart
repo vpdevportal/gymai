@@ -8,23 +8,40 @@ part 'body_metrics_provider.g.dart';
 
 /// Local view of the user's body metrics, synced with Firestore.
 class BodyMetrics {
-  const BodyMetrics({this.height, this.weight, this.age, this.loading = false});
+  const BodyMetrics({
+    this.height,
+    this.weight,
+    this.dateOfBirth,
+    this.loading = false,
+  });
 
   final double? height; // cm
   final double? weight; // kg
-  final int? age; // years
+  final DateTime? dateOfBirth;
   final bool loading;
+
+  /// Calculated age from DOB (null if DOB not set).
+  int? get age {
+    if (dateOfBirth == null) return null;
+    final now = DateTime.now();
+    var years = now.year - dateOfBirth!.year;
+    if (now.month < dateOfBirth!.month ||
+        (now.month == dateOfBirth!.month && now.day < dateOfBirth!.day)) {
+      years--;
+    }
+    return years;
+  }
 
   BodyMetrics copyWith({
     double? height,
     double? weight,
-    int? age,
+    DateTime? dateOfBirth,
     bool? loading,
   }) =>
       BodyMetrics(
         height: height ?? this.height,
         weight: weight ?? this.weight,
-        age: age ?? this.age,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
         loading: loading ?? this.loading,
       );
 }
@@ -37,8 +54,7 @@ class BodyMetricsNotifier extends _$BodyMetricsNotifier {
     return const BodyMetrics(loading: true);
   }
 
-  String? get _userId =>
-      firebase.FirebaseAuth.instance.currentUser?.uid;
+  String? get _userId => firebase.FirebaseAuth.instance.currentUser?.uid;
 
   Future<void> _load() async {
     final uid = _userId;
@@ -54,7 +70,7 @@ class BodyMetricsNotifier extends _$BodyMetricsNotifier {
           state = BodyMetrics(
             height: profile.height,
             weight: profile.weight,
-            age: profile.age,
+            dateOfBirth: profile.dateOfBirth,
           );
         } else {
           state = const BodyMetrics();
@@ -63,18 +79,22 @@ class BodyMetricsNotifier extends _$BodyMetricsNotifier {
     );
   }
 
-  Future<void> update({double? height, double? weight, int? age}) async {
+  Future<void> update({
+    double? height,
+    double? weight,
+    DateTime? dateOfBirth,
+  }) async {
     final uid = _userId;
     if (uid == null) return;
 
     // Optimistic update
-    state = state.copyWith(height: height, weight: weight, age: age);
+    state = state.copyWith(height: height, weight: weight, dateOfBirth: dateOfBirth);
 
     final profile = UserProfile(
       userId: uid,
-      height: height ?? state.height,
-      weight: weight ?? state.weight,
-      age: age ?? state.age,
+      height: state.height,
+      weight: state.weight,
+      dateOfBirth: state.dateOfBirth,
     );
 
     await getIt<UserProfileRepository>().saveProfile(profile);

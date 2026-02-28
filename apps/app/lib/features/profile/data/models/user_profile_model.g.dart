@@ -11,7 +11,7 @@ _UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) =>
       userId: json['userId'] as String,
       height: (json['height'] as num?)?.toDouble(),
       weight: (json['weight'] as num?)?.toDouble(),
-      age: (json['age'] as num?)?.toInt(),
+      dateOfBirth: _dateFromJson(json['dateOfBirth']),
     );
 
 Map<String, dynamic> _$UserProfileModelToJson(_UserProfileModel instance) =>
@@ -19,5 +19,5 @@ Map<String, dynamic> _$UserProfileModelToJson(_UserProfileModel instance) =>
       'userId': instance.userId,
       'height': instance.height,
       'weight': instance.weight,
-      'age': instance.age,
+      'dateOfBirth': _dateToJson(instance.dateOfBirth),
     };
