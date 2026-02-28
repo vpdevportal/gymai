@@ -58,29 +58,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               // ── App logo ──────────────────────────────────────
               Center(
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [AppColors.primary, AppColors.accent],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(22),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.4),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.fitness_center_rounded,
-                    color: Colors.white,
-                    size: 38,
-                  ),
+                child: Image.asset(
+                  'assets/images/logo_transparent.png',
+                  width: 100,
+                  height: 100,
                 ),
               ),
               const SizedBox(height: 32),
