@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:gymai/core/widgets/app_shell.dart';
+import 'package:gymai/core/widgets/fade_through_indexed_stack.dart';
 import 'package:gymai/features/auth/presentation/screens/login_screen.dart';
 import 'package:gymai/features/auth/presentation/screens/splash_screen.dart';
 import 'package:gymai/features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -24,11 +25,17 @@ final appRouter = GoRouter(
     ),
 
     // Tabbed shell — preserves each branch's nav stack independently
-    StatefulShellRoute.indexedStack(
+    StatefulShellRoute(
       builder: (context, state, navigationShell) => AppShell(
         currentIndex: navigationShell.currentIndex,
         child: navigationShell,
       ),
+      navigatorContainerBuilder: (context, navigationShell, children) {
+        return FadeThroughIndexedStack(
+          index: navigationShell.currentIndex,
+          children: children,
+        );
+      },
       branches: [
         StatefulShellBranch(
           routes: [
