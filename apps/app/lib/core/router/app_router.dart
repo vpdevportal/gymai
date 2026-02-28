@@ -1,7 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymai/core/widgets/app_shell.dart';
 import 'package:gymai/features/auth/presentation/screens/login_screen.dart';
 import 'package:gymai/features/auth/presentation/screens/splash_screen.dart';
+import 'package:gymai/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:gymai/features/diary/presentation/screens/diary_screen.dart';
+import 'package:gymai/features/profile/presentation/screens/profile_screen.dart';
 
 part 'app_routes.dart';
 
@@ -19,36 +22,42 @@ final appRouter = GoRouter(
       name: AppRoutes.loginName,
       builder: (context, state) => const LoginScreen(),
     ),
-    ShellRoute(
-      builder: (context, state, child) => _AppShell(child: child),
-      routes: [
-        GoRoute(
-          path: AppRoutes.home,
-          name: AppRoutes.homeName,
-          builder: (context, state) => const _PlaceholderScreen(title: 'Home'),
+
+    // Tabbed shell — preserves each branch's nav stack independently
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => AppShell(
+        currentIndex: navigationShell.currentIndex,
+        child: navigationShell,
+      ),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.diary,
+              name: AppRoutes.diaryName,
+              builder: (context, state) => const DiaryScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.dashboard,
+              name: AppRoutes.dashboardName,
+              builder: (context, state) => const DashboardScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.profile,
+              name: AppRoutes.profileName,
+              builder: (context, state) => const ProfileScreen(),
+            ),
+          ],
         ),
       ],
     ),
   ],
 );
-
-// Placeholder shell – replace with your BottomNav widget
-class _AppShell extends StatelessWidget {
-  const _AppShell({required this.child});
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => Scaffold(body: child);
-}
-
-// Temporary placeholder – remove when building out pages
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({required this.title});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(title)),
-        body: Center(child: Text(title)),
-      );
-}

@@ -7,6 +7,13 @@ abstract final class AppRoutes {
   static const login = '/login';
   static const loginName = 'login';
 
-  static const home = '/home';
-  static const homeName = 'home';
+  // Tab routes
+  static const diary = '/diary';
+  static const diaryName = 'diary';
+
+  static const dashboard = '/dashboard';
+  static const dashboardName = 'dashboard';
+
+  static const profile = '/profile';
+  static const profileName = 'profile';
 }

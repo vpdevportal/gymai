@@ -33,7 +33,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref.listen(authProvider, (_, next) {
       if (next.status == AuthStatus.authenticated) {
-        context.goNamed(AppRoutes.homeName);
+        context.goNamed(AppRoutes.dashboardName);
       }
       if (next.errorMessage != null) {
         ScaffoldMessenger.of(context).showSnackBar(

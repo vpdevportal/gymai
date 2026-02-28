@@ -50,15 +50,48 @@
 
 ---
 
-## Profile
+## Tabbed Navigation Shell
 
-**Status:** 🚧 In Progress  
+**Status:** ✅ Complete  
 **Branch:** `feature/profile`  
 **Last Updated:** 2026-02-28
 
 ### Summary
-- Feature branch created: `feature/profile`
-- Implementation pending
+- 3-tab bottom navigation: **Diary**, **Dashboard**, **Profile**
+- `StatefulShellRoute.indexedStack` (go_router) — each tab preserves its own navigation stack independently
+- Custom bottom nav bar (`AppShell`) with a **promoted center Dashboard button** — elevated circle with gradient, animated float on selection
+- Diary tab: `Icons.book` / `Icons.book_outlined`
+- Dashboard tab: Circular gradient FAB-style with `Icons.dashboard_rounded` — floats up when active
+- Profile tab: `Icons.person_rounded` / `Icons.person_outline_rounded`
+- All tab transitions are animated (200ms `easeInOut`)
+- Login screen redirects to `/dashboard` after successful auth
+
+### Files
+- `lib/core/widgets/app_shell.dart` — custom bottom nav bar widget
+- `lib/core/router/app_router.dart` — `StatefulShellRoute` wiring
+- `lib/core/router/app_routes.dart` — route constants
+- `lib/features/diary/presentation/screens/diary_screen.dart`
+- `lib/features/dashboard/presentation/screens/dashboard_screen.dart`
+- `lib/features/profile/presentation/screens/profile_screen.dart`
+
+---
+
+## Profile
+
+**Status:** ✅ Complete  
+**Branch:** `feature/profile`  
+**Last Updated:** 2026-02-28
+
+### Summary
+- Displays user **name** and **email** from Firebase Auth state (via `authProvider`)
+- **Avatar**: Shows Google profile photo if available; falls back to initials with gradient background
+- **Account section**: Name, Email, User ID (truncated for display)
+- **Settings section**: Notifications, Privacy, Help & Support (placeholder rows)
+- **Sign Out** button — calls `logout()` on `authProvider` then redirects to Login
+- All data flows reactively from Riverpod `authProvider` — no local state needed
+
+### Files
+- `lib/features/profile/presentation/screens/profile_screen.dart`
 
 ---
 
