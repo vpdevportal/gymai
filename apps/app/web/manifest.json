@@ -1,6 +1,6 @@
 {
-    "name": "gymai",
-    "short_name": "gymai",
+    "name": "GymAI",
+    "short_name": "GymAI",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#000000",
