@@ -10,6 +10,7 @@ analyzer:
 
 linter:
   rules:
-    public_member_api_docs: false
     lines_longer_than_80_chars: false
     prefer_relative_imports: false
+    public_member_api_docs: false
+    sort_pub_dependencies: false
