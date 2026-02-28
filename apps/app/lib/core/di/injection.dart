@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -10,6 +11,9 @@ import 'package:gymai/features/auth/data/repositories/auth_repository_impl.dart'
 import 'package:gymai/features/auth/domain/repositories/auth_repository.dart';
 import 'package:gymai/features/auth/domain/usecases/login_usecase.dart';
 import 'package:gymai/features/auth/domain/usecases/sign_in_with_google_usecase.dart';
+import 'package:gymai/features/profile/data/datasources/firestore_profile_datasource.dart';
+import 'package:gymai/features/profile/data/repositories/user_profile_repository_impl.dart';
+import 'package:gymai/features/profile/domain/repositories/user_profile_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
@@ -27,6 +31,7 @@ Future<void> configureDependencies() async {
 
   // ── Firebase ───────────────────────────────────────────────────
     ..registerSingleton<firebase.FirebaseAuth>(firebase.FirebaseAuth.instance)
+    ..registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance)
     ..registerSingleton<GoogleSignIn>(
       GoogleSignIn(scopes: ['email', 'profile']),
     )
@@ -49,6 +54,9 @@ Future<void> configureDependencies() async {
         googleSignIn: getIt(),
       ),
     )
+    ..registerLazySingleton<FirestoreProfileDataSource>(
+      () => FirestoreProfileDataSourceImpl(firestore: getIt()),
+    )
 
   // ── Repositories ───────────────────────────────────────────────
     ..registerLazySingleton<AuthRepository>(
@@ -56,6 +64,9 @@ Future<void> configureDependencies() async {
         remoteDataSource: getIt(),
         firebaseDataSource: getIt(),
       ),
+    )
+    ..registerLazySingleton<UserProfileRepository>(
+      () => UserProfileRepositoryImpl(dataSource: getIt()),
     )
 
   // ── Use Cases ──────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_provider.dart';
+part of 'body_metrics_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,53 @@ part of 'auth_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Auth)
-const authProvider = AuthProvider._();
+@ProviderFor(BodyMetricsNotifier)
+const bodyMetricsProvider = BodyMetricsNotifierProvider._();
 
-final class AuthProvider extends $NotifierProvider<Auth, AuthState> {
-  const AuthProvider._()
+final class BodyMetricsNotifierProvider
+    extends $NotifierProvider<BodyMetricsNotifier, BodyMetrics> {
+  const BodyMetricsNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'authProvider',
+        name: r'bodyMetricsProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$authHash();
+  String debugGetCreateSourceHash() => _$bodyMetricsNotifierHash();
 
   @$internal
   @override
-  Auth create() => Auth();
+  BodyMetricsNotifier create() => BodyMetricsNotifier();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AuthState value) {
+  Override overrideWithValue(BodyMetrics value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<AuthState>(value),
+      providerOverride: $SyncValueProvider<BodyMetrics>(value),
     );
   }
 }
 
-String _$authHash() => r'74eebd0507b61d69e202f67c92042342685eb730';
+String _$bodyMetricsNotifierHash() =>
+    r'e94af1cb679af73f086038ba819bd7b491d52100';
 
-abstract class _$Auth extends $Notifier<AuthState> {
-  AuthState build();
+abstract class _$BodyMetricsNotifier extends $Notifier<BodyMetrics> {
+  BodyMetrics build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AuthState, AuthState>;
+    final ref = this.ref as $Ref<BodyMetrics, BodyMetrics>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AuthState, AuthState>,
-              AuthState,
+              AnyNotifier<BodyMetrics, BodyMetrics>,
+              BodyMetrics,
               Object?,
               Object?
             >;

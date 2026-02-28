@@ -85,13 +85,30 @@
 ### Summary
 - Displays user **name** and **email** from Firebase Auth state (via `authProvider`)
 - **Avatar**: Shows Google profile photo if available; falls back to initials with gradient background
-- **Account section**: Name, Email, User ID (truncated for display)
+- **Account section**: Name, Email
+- **Body Metrics section**: Editable Height (cm), Weight (kg), Age (yrs)
+  - Inline edit mode with numeric text fields and input validation
+  - Data saved to **Firestore** under `users/{userId}` document
+  - Loaded on screen open with optimistic local update on save
 - **Settings section**: Notifications, Privacy, Help & Support (placeholder rows)
 - **Sign Out** button — calls `logout()` on `authProvider` then redirects to Login
-- All data flows reactively from Riverpod `authProvider` — no local state needed
+- Firestore security rules: users can only access their own document
+
+### Architecture
+- `UserProfile` domain entity
+- `FirestoreProfileDataSource` → Firestore `users/{userId}` document
+- `UserProfileRepository` interface + `UserProfileRepositoryImpl`
+- `BodyMetricsNotifier` (Riverpod) uses `UserProfileRepository` via GetIt
 
 ### Files
+- `lib/features/profile/domain/entities/user_profile.dart`
+- `lib/features/profile/domain/repositories/user_profile_repository.dart`
+- `lib/features/profile/data/datasources/firestore_profile_datasource.dart`
+- `lib/features/profile/data/models/user_profile_model.dart`
+- `lib/features/profile/data/repositories/user_profile_repository_impl.dart`
+- `lib/features/profile/presentation/providers/body_metrics_provider.dart`
 - `lib/features/profile/presentation/screens/profile_screen.dart`
+- `firestore.rules`
 
 ---
 
