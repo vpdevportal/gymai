@@ -25,5 +25,3 @@ sealed class Failure with _$Failure {
     @Default('An unknown error occurred.') String message,
   }) = UnknownFailure;
 }
-
-
