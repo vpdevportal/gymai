@@ -467,7 +467,7 @@ class _MetricRow extends StatelessWidget {
           const Spacer(),
           if (editing)
             SizedBox(
-              width: 80,
+              width: 110,
               height: 36,
               child: TextField(
                 controller: controller,
