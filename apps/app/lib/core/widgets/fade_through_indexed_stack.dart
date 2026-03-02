@@ -25,7 +25,7 @@ class _FadeThroughIndexedStackState extends State<FadeThroughIndexedStack>
   late AnimationController _controller;
   late Animation<double> _fadeOut;
   late Animation<double> _fadeIn;
-  late Animation<double> _scaleIn;
+
   int _prevIndex = 0;
 
   @override
@@ -37,21 +37,16 @@ class _FadeThroughIndexedStackState extends State<FadeThroughIndexedStack>
     _fadeOut = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0, 0.3, curve: Curves.easeOut),
+        // Using a smooth ease out for the outgoing view
+        curve: Curves.fastOutSlowIn,
       ),
     );
 
     _fadeIn = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.3, 1, curve: Curves.easeIn),
-      ),
-    );
-
-    _scaleIn = Tween<double>(begin: 0.92, end: 1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.3, 1, curve: Curves.easeOutCubic),
+        // Using a smooth ease in for the incoming view
+        curve: Curves.fastOutSlowIn,
       ),
     );
   }
@@ -88,7 +83,6 @@ class _FadeThroughIndexedStackState extends State<FadeThroughIndexedStack>
         // Inactive tabs stay offstage to preserve state
         if (!isCurrent && !isPrevious) {
           return Offstage(
-            offstage: true,
             child: TickerMode(enabled: false, child: child),
           );
         }
@@ -98,18 +92,18 @@ class _FadeThroughIndexedStackState extends State<FadeThroughIndexedStack>
           return child;
         }
 
-        // Fading out the old tab
+        // Fading out the old tab (no TickerMode disabling here so it doesn't freeze jarringly)
         if (isPrevious) {
           return FadeTransition(
             opacity: _fadeOut,
-            child: TickerMode(enabled: false, child: child),
+            child: child,
           );
         }
 
-        // Fading in and scaling up the new tab
+        // Fading in the new tab smoothly
         return FadeTransition(
           opacity: _fadeIn,
-          child: ScaleTransition(scale: _scaleIn, child: child),
+          child: child,
         );
       }),
     );
