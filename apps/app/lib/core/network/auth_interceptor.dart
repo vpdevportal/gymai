@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthInterceptor extends Interceptor {
   AuthInterceptor({required FlutterSecureStorage secureStorage})
-      : _secureStorage = secureStorage;
+    : _secureStorage = secureStorage;
 
   final FlutterSecureStorage _secureStorage;
   static const _tokenKey = 'auth_token';

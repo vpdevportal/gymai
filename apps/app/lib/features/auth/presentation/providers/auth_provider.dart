@@ -20,11 +20,7 @@ class AuthState {
   final User? user;
   final String? errorMessage;
 
-  AuthState copyWith({
-    AuthStatus? status,
-    User? user,
-    String? errorMessage,
-  }) {
+  AuthState copyWith({AuthStatus? status, User? user, String? errorMessage}) {
     return AuthState(
       status: status ?? this.status,
       user: user ?? this.user,
@@ -40,27 +36,24 @@ class Auth extends _$Auth {
     // Check for existing Firebase session
     final repo = getIt<AuthRepository>();
     repo.getCurrentUser().then((result) {
-      result.fold(
-        (_) {},
-        (user) {
-          if (user != null) {
-            state = AuthState(status: AuthStatus.authenticated, user: user);
-          }
-        },
-      );
+      result.fold((_) {}, (user) {
+        if (user != null) {
+          state = AuthState(status: AuthStatus.authenticated, user: user);
+        }
+      });
     });
     return const AuthState();
   }
 
   Future<void> login({required String email, required String password}) async {
     state = state.copyWith(status: AuthStatus.loading);
-    final result = await getIt<LoginUseCase>()(email: email, password: password);
+    final result = await getIt<LoginUseCase>()(
+      email: email,
+      password: password,
+    );
     result.fold(
       (failure) => state = AuthState(errorMessage: failure.message),
-      (user) => state = AuthState(
-        status: AuthStatus.authenticated,
-        user: user,
-      ),
+      (user) => state = AuthState(status: AuthStatus.authenticated, user: user),
     );
   }
 
@@ -69,10 +62,7 @@ class Auth extends _$Auth {
     final result = await getIt<SignInWithGoogleUseCase>()();
     result.fold(
       (failure) => state = AuthState(errorMessage: failure.message),
-      (user) => state = AuthState(
-        status: AuthStatus.authenticated,
-        user: user,
-      ),
+      (user) => state = AuthState(status: AuthStatus.authenticated, user: user),
     );
   }
 

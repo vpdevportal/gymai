@@ -22,10 +22,7 @@ class DioClient {
       authInterceptor,
       ErrorInterceptor(),
       if (AppConfig.isDevelopment)
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-        ),
+        PrettyDioLogger(requestHeader: true, requestBody: true),
     ]);
   }
 

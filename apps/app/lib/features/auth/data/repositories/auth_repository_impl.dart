@@ -10,8 +10,8 @@ class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({
     required AuthRemoteDataSource remoteDataSource,
     required FirebaseAuthDataSource firebaseDataSource,
-  })  : _remoteDataSource = remoteDataSource,
-        _firebaseDataSource = firebaseDataSource;
+  }) : _remoteDataSource = remoteDataSource,
+       _firebaseDataSource = firebaseDataSource;
 
   final AuthRemoteDataSource _remoteDataSource;
   final FirebaseAuthDataSource _firebaseDataSource;

@@ -13,8 +13,8 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   const FirebaseAuthDataSourceImpl({
     required firebase.FirebaseAuth firebaseAuth,
     required GoogleSignIn googleSignIn,
-  })  : _firebaseAuth = firebaseAuth,
-        _googleSignIn = googleSignIn;
+  }) : _firebaseAuth = firebaseAuth,
+       _googleSignIn = googleSignIn;
 
   final firebase.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
@@ -33,8 +33,9 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
         idToken: googleAuth.idToken,
       );
 
-      final userCredential =
-          await _firebaseAuth.signInWithCredential(credential);
+      final userCredential = await _firebaseAuth.signInWithCredential(
+        credential,
+      );
       final user = userCredential.user;
 
       if (user == null) {
@@ -58,10 +59,7 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
 
   @override
   Future<void> signOut() async {
-    await Future.wait([
-      _firebaseAuth.signOut(),
-      _googleSignIn.signOut(),
-    ]);
+    await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
   }
 
   @override

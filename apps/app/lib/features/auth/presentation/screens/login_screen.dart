@@ -33,7 +33,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref.listen(authProvider, (_, next) {
       if (next.status == AuthStatus.authenticated) {
-        context.goNamed(AppRoutes.dashboardName);
+        context.goNamed(AppRoutes.profileName);
       }
       if (next.errorMessage != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -81,10 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const Text(
                 'Your AI-powered fitness companion',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.onSurfaceMuted,
-                  fontSize: 15,
-                ),
+                style: TextStyle(color: AppColors.onSurfaceMuted, fontSize: 15),
               ),
               const SizedBox(height: 48),
 
@@ -99,9 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               // ── Divider ───────────────────────────────────────
               const Row(
                 children: [
-                  Expanded(
-                    child: Divider(color: AppColors.onSurfaceMuted),
-                  ),
+                  Expanded(child: Divider(color: AppColors.onSurfaceMuted)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
@@ -112,9 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Divider(color: AppColors.onSurfaceMuted),
-                  ),
+                  Expanded(child: Divider(color: AppColors.onSurfaceMuted)),
                 ],
               ),
               const SizedBox(height: 16),
@@ -139,7 +132,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       setState(() => _obscurePassword = !_obscurePassword),
                   onSubmit: () async {
                     if (!_formKey.currentState!.validate()) return;
-                    await ref.read(authProvider.notifier).login(
+                    await ref
+                        .read(authProvider.notifier)
+                        .login(
                           email: _emailController.text.trim(),
                           password: _passwordController.text,
                         );
@@ -155,10 +150,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
 // ── Google Sign-In Button ──────────────────────────────────────────────────
 class _GoogleSignInButton extends StatelessWidget {
-  const _GoogleSignInButton({
-    required this.isLoading,
-    required this.onPressed,
-  });
+  const _GoogleSignInButton({required this.isLoading, required this.onPressed});
 
   final bool isLoading;
   final VoidCallback onPressed;
@@ -184,8 +176,7 @@ class _GoogleSignInButton extends StatelessWidget {
                 height: 22,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                 ),
               )
             : Row(
@@ -227,11 +218,7 @@ class _GoogleLogoPainter extends CustomPainter {
     final radius = size.width / 2;
 
     // Background circle
-    canvas.drawCircle(
-      center,
-      radius,
-      Paint()..color = Colors.white,
-    );
+    canvas.drawCircle(center, radius, Paint()..color = Colors.white);
 
     // Blue arc (top-right)
     _drawArc(canvas, center, radius, -90, 160, const Color(0xFF4285F4));
@@ -257,8 +244,14 @@ class _GoogleLogoPainter extends CustomPainter {
     );
   }
 
-  void _drawArc(Canvas canvas, Offset center, double radius, double startDeg,
-      double sweepDeg, Color color) {
+  void _drawArc(
+    Canvas canvas,
+    Offset center,
+    double radius,
+    double startDeg,
+    double sweepDeg,
+    Color color,
+  ) {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
@@ -355,8 +348,7 @@ class _EmailPasswordForm extends StatelessWidget {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.white),
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
                   : const Text('Sign In'),

@@ -14,18 +14,12 @@ void main() async {
   await dotenv.load();
 
   // Initialise Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Set up dependency injection
   await configureDependencies();
 
-  runApp(
-    const ProviderScope(
-      child: GymAIApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: GymAIApp()));
 }
 
 class GymAIApp extends StatelessWidget {

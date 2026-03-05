@@ -42,7 +42,7 @@ final class BodyMetricsNotifierProvider
 }
 
 String _$bodyMetricsNotifierHash() =>
-    r'1a90b8d48daf90a8776e7493160856f8558b1831';
+    r'a8e05e40450e79d8636ff949ea3d4ac9e9922c65';
 
 abstract class _$BodyMetricsNotifier extends $Notifier<BodyMetrics> {
   BodyMetrics build();

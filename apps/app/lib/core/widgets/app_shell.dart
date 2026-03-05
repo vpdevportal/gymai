@@ -31,10 +31,7 @@ class AppShell extends StatelessWidget {
 }
 
 class _GymAIBottomNav extends StatelessWidget {
-  const _GymAIBottomNav({
-    required this.currentIndex,
-    required this.onTap,
-  });
+  const _GymAIBottomNav({required this.currentIndex, required this.onTap});
 
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -45,10 +42,7 @@ class _GymAIBottomNav extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         border: const Border(
-          top: BorderSide(
-            color: AppColors.surfaceVariant,
-            width: 0.5,
-          ),
+          top: BorderSide(color: AppColors.surfaceVariant, width: 0.5),
         ),
         boxShadow: [
           BoxShadow(
@@ -145,8 +139,7 @@ class _NavItem extends StatelessWidget {
                 style: TextStyle(
                   color: color,
                   fontSize: 11,
-                  fontWeight:
-                      isSelected ? FontWeight.w600 : FontWeight.w400,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 ),
                 child: Text(label),
               ),
@@ -168,78 +161,63 @@ class _CenterNavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Elevated circle button
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeOutBack,
-              transform: Matrix4.translationValues(
-                0,
-                isSelected ? -10 : -4,
-                0,
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Elevated circle button
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutBack,
+            transform: Matrix4.translationValues(0, isSelected ? -10 : -4, 0),
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isSelected
+                      ? [AppColors.primary, AppColors.accent]
+                      : [AppColors.surfaceVariant, AppColors.surfaceVariant],
+                ),
+                shape: BoxShape.circle,
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.5),
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
               ),
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: isSelected
-                        ? [
-                            AppColors.primary,
-                            AppColors.accent,
-                          ]
-                        : [
-                            AppColors.surfaceVariant,
-                            AppColors.surfaceVariant,
-                          ],
-                  ),
-                  shape: BoxShape.circle,
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.5),
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
-                          ),
-                        ]
-                      : [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                ),
-                child: Icon(
-                  isSelected
-                      ? Icons.dashboard_rounded
-                      : Icons.dashboard_outlined,
-                  color: isSelected
-                      ? Colors.white
-                      : AppColors.onSurfaceMuted,
-                  size: 22,
-                ),
+              child: Icon(
+                isSelected ? Icons.dashboard_rounded : Icons.dashboard_outlined,
+                color: isSelected ? Colors.white : AppColors.onSurfaceMuted,
+                size: 22,
               ),
             ),
-            const SizedBox(height: 2),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
-              style: TextStyle(
-                color: isSelected ? AppColors.primary : AppColors.onSurfaceMuted,
-                fontSize: 11,
-                fontWeight:
-                    isSelected ? FontWeight.w600 : FontWeight.w400,
-              ),
-              child: const Text('Dashboard'),
+          ),
+          const SizedBox(height: 2),
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 200),
+            style: TextStyle(
+              color: isSelected ? AppColors.primary : AppColors.onSurfaceMuted,
+              fontSize: 11,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             ),
-          ],
-        ),
+            child: const Text('Dashboard'),
+          ),
+        ],
+      ),
     );
   }
 }

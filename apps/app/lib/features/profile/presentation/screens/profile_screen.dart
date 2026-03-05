@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymai/core/router/app_router.dart';
 import 'package:gymai/core/theme/app_theme.dart';
 import 'package:gymai/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymai/features/profile/domain/entities/activity_level.dart';
 import 'package:gymai/features/profile/presentation/providers/body_metrics_provider.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -20,6 +21,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   late TextEditingController _heightCtrl;
   late TextEditingController _weightCtrl;
   DateTime? _selectedDob; // used during editing
+  String? _selectedGender; // used during editing
+  ActivityLevel? _selectedActivityLevel; // used during editing
 
   @override
   void initState() {
@@ -39,6 +42,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     _heightCtrl.text = metrics.height?.toString() ?? '';
     _weightCtrl.text = metrics.weight?.toString() ?? '';
     _selectedDob = metrics.dateOfBirth;
+    _selectedGender = metrics.gender;
+    _selectedActivityLevel = metrics.activityLevel;
     setState(() => _editingMetrics = true);
   }
 
@@ -46,11 +51,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final height = double.tryParse(_heightCtrl.text);
     final weight = double.tryParse(_weightCtrl.text);
 
-    await ref.read(bodyMetricsProvider.notifier).update(
-          height: height,
-          weight: weight,
-          dateOfBirth: _selectedDob,
-        );
+    await ref
+        .read(bodyMetricsProvider.notifier)
+        .update(height: height, weight: weight, dateOfBirth: _selectedDob, gender: _selectedGender, activityLevel: _selectedActivityLevel);
     setState(() => _editingMetrics = false);
   }
 
@@ -147,26 +150,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             padding: const EdgeInsets.all(20),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                // Account info
-                const _SectionHeader(title: 'Account'),
-                const SizedBox(height: 8),
-                _InfoCard(
-                  children: [
-                    _InfoRow(
-                      icon: Icons.person_outline_rounded,
-                      label: 'Name',
-                      value: user?.name ?? '—',
-                    ),
-                    const _Divider(),
-                    _InfoRow(
-                      icon: Icons.email_outlined,
-                      label: 'Email',
-                      value: user?.email ?? '—',
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
 
                 // Body metrics
                 Row(
@@ -231,7 +214,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   heightCtrl: _heightCtrl,
                   weightCtrl: _weightCtrl,
                   selectedDob: _selectedDob,
+                  selectedGender: _selectedGender,
+                  selectedActivityLevel: _selectedActivityLevel,
                   onPickDob: _pickDob,
+                  onChangedGender: (g) => setState(() => _selectedGender = g),
+                  onChangedActivityLevel: (al) => setState(() => _selectedActivityLevel = al),
                 ),
 
                 const SizedBox(height: 24),
@@ -290,7 +277,11 @@ class _MetricsCard extends StatelessWidget {
     required this.heightCtrl,
     required this.weightCtrl,
     required this.selectedDob,
+    required this.selectedGender,
+    required this.selectedActivityLevel,
     required this.onPickDob,
+    required this.onChangedGender,
+    required this.onChangedActivityLevel,
   });
 
   final bool editing;
@@ -298,7 +289,11 @@ class _MetricsCard extends StatelessWidget {
   final TextEditingController heightCtrl;
   final TextEditingController weightCtrl;
   final DateTime? selectedDob;
+  final String? selectedGender;
+  final ActivityLevel? selectedActivityLevel;
   final VoidCallback onPickDob;
+  final ValueChanged<String> onChangedGender;
+  final ValueChanged<ActivityLevel?> onChangedActivityLevel;
 
   String _formatDob(DateTime? dob) {
     if (dob == null) return '—';
@@ -309,7 +304,9 @@ class _MetricsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dobDisplay = editing ? _formatDob(selectedDob) : _formatDob(metrics.dateOfBirth);
+    final dobDisplay = editing
+        ? _formatDob(selectedDob)
+        : _formatDob(metrics.dateOfBirth);
     final ageDisplay = editing
         ? (selectedDob != null ? _computeAge(selectedDob!) : null)
         : metrics.age;
@@ -322,6 +319,12 @@ class _MetricsCard extends StatelessWidget {
       ),
       child: Column(
         children: [
+          _GenderRow(
+            editing: editing,
+            gender: editing ? selectedGender : metrics.gender,
+            onChanged: onChangedGender,
+          ),
+          const _Divider(),
           _MetricRow(
             icon: Icons.height_rounded,
             label: 'Height',
@@ -355,7 +358,11 @@ class _MetricsCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
-                  const Icon(Icons.cake_outlined, size: 18, color: AppColors.onSurfaceMuted),
+                  const Icon(
+                    Icons.cake_outlined,
+                    size: 18,
+                    color: AppColors.onSurfaceMuted,
+                  ),
                   const SizedBox(width: 12),
                   const Text(
                     'Date of Birth',
@@ -364,7 +371,10 @@ class _MetricsCard extends StatelessWidget {
                   const Spacer(),
                   if (editing)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 7,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.surfaceVariant,
                         borderRadius: BorderRadius.circular(8),
@@ -382,8 +392,11 @@ class _MetricsCard extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 6),
-                          const Icon(Icons.edit_calendar_outlined,
-                              size: 14, color: AppColors.primary),
+                          const Icon(
+                            Icons.edit_calendar_outlined,
+                            size: 14,
+                            color: AppColors.primary,
+                          ),
                         ],
                       ),
                     )
@@ -414,6 +427,57 @@ class _MetricsCard extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          const _Divider(),
+          _ActivityLevelRow(
+            editing: editing,
+            activityLevel: editing ? selectedActivityLevel : metrics.activityLevel,
+            onChanged: onChangedActivityLevel,
+          ),
+          AnimatedBuilder(
+            animation: Listenable.merge([heightCtrl, weightCtrl]),
+            builder: (context, child) {
+              final currentWeight = editing ? double.tryParse(weightCtrl.text) : metrics.weight;
+              final currentHeight = editing ? double.tryParse(heightCtrl.text) : metrics.height;
+              final currentGender = editing ? selectedGender : metrics.gender;
+              final currentDob = editing ? selectedDob : metrics.dateOfBirth;
+              final currentActivity = editing ? selectedActivityLevel : metrics.activityLevel;
+
+              final currentAge = currentDob != null ? _computeAge(currentDob) : metrics.age;
+
+              int? bmr;
+              if (currentWeight != null && currentHeight != null && currentAge != null && currentGender != null) {
+                double base = (10 * currentWeight) + (6.25 * currentHeight) - (5 * currentAge);
+                bmr = currentGender == 'Male' ? (base + 5).round() : (base - 161).round();
+              }
+
+              int? tdee;
+              if (bmr != null && currentActivity != null) {
+                tdee = (bmr * currentActivity.multiplier).round();
+              }
+
+              return Column(
+                children: [
+                  const _Divider(),
+                  _CalculatedMetricRow(
+                    icon: Icons.local_fire_department_outlined,
+                    label: 'BMR',
+                    unit: 'kcal/day',
+                    value: bmr?.toString(),
+                    subtitle: 'Basal Metabolic Rate',
+                  ),
+                  const _Divider(),
+                  _CalculatedMetricRow(
+                    icon: Icons.bolt_outlined,
+                    label: 'TDEE',
+                    unit: 'kcal/day',
+                    value: tdee?.toString(),
+                    subtitle: 'Maintenance Calories',
+                    highlight: true,
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
@@ -482,20 +546,23 @@ class _MetricRow extends StatelessWidget {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: AppColors.surfaceVariant,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        const BorderSide(color: AppColors.primary, width: 1.5),
+                    borderSide: const BorderSide(
+                      color: AppColors.primary,
+                      width: 1.5,
+                    ),
                   ),
                   hintText: '—',
-                  hintStyle:
-                      const TextStyle(color: AppColors.onSurfaceMuted),
+                  hintStyle: const TextStyle(color: AppColors.onSurfaceMuted),
                   suffix: Text(
                     unit,
                     style: const TextStyle(
@@ -510,13 +577,259 @@ class _MetricRow extends StatelessWidget {
             Text(
               value != null ? '$value $unit' : '— $unit',
               style: TextStyle(
-                color:
-                    value != null ? AppColors.onBackground : AppColors.onSurfaceMuted,
+                color: value != null
+                    ? AppColors.onBackground
+                    : AppColors.onSurfaceMuted,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _CalculatedMetricRow extends StatelessWidget {
+  const _CalculatedMetricRow({
+    required this.icon,
+    required this.label,
+    required this.unit,
+    required this.value,
+    this.subtitle,
+    this.highlight = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final String? subtitle;
+  final String unit;
+  final String? value;
+  final bool highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: highlight ? AppColors.primary.withValues(alpha: 0.05) : Colors.transparent,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Icon(
+            icon, 
+            size: 20, 
+            color: highlight ? AppColors.primary : AppColors.onSurfaceMuted,
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  color: highlight ? AppColors.primary : AppColors.onSurface, 
+                  fontSize: 14,
+                  fontWeight: highlight ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+              if (subtitle != null) ...[
+                const SizedBox(height: 2),
+                Text(
+                  subtitle!,
+                  style: const TextStyle(
+                    color: AppColors.onSurfaceMuted,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ],
+          ),
+          const Spacer(),
+          Text(
+            value != null ? '$value $unit' : '— $unit',
+            style: TextStyle(
+              color: value != null
+                  ? (highlight ? AppColors.primary : AppColors.onBackground)
+                  : AppColors.onSurfaceMuted,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActivityLevelRow extends StatelessWidget {
+  const _ActivityLevelRow({
+    required this.editing,
+    required this.activityLevel,
+    required this.onChanged,
+  });
+
+  final bool editing;
+  final ActivityLevel? activityLevel;
+  final ValueChanged<ActivityLevel?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          const Icon(Icons.directions_run_outlined, size: 18, color: AppColors.onSurfaceMuted),
+          const SizedBox(width: 12),
+          const Text(
+            'Activity',
+            style: TextStyle(color: AppColors.onSurface, fontSize: 14),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: editing
+                ? DropdownButtonHideUnderline(
+                    child: DropdownButton<ActivityLevel>(
+                      isExpanded: true,
+                      alignment: AlignmentDirectional.centerEnd,
+                      value: activityLevel,
+                      hint: const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Select',
+                          style: TextStyle(color: AppColors.onSurfaceMuted, fontSize: 14),
+                        ),
+                      ),
+                      dropdownColor: AppColors.surfaceVariant,
+                      icon: const Icon(Icons.arrow_drop_down, color: AppColors.onSurfaceMuted),
+                      style: const TextStyle(
+                        color: AppColors.onBackground,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      onChanged: onChanged,
+                      items: ActivityLevel.values.map((level) {
+                        return DropdownMenuItem(
+                          value: level,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              level.displayName,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  )
+                : Container(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      activityLevel?.displayName ?? '—',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: activityLevel != null
+                            ? AppColors.onBackground
+                            : AppColors.onSurfaceMuted,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GenderRow extends StatelessWidget {
+  const _GenderRow({
+    required this.editing,
+    required this.gender,
+    required this.onChanged,
+  });
+
+  final bool editing;
+  final String? gender;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          const Icon(Icons.people_alt_outlined, size: 18, color: AppColors.onSurfaceMuted),
+          const SizedBox(width: 12),
+          const Text(
+            'Gender',
+            style: TextStyle(color: AppColors.onSurface, fontSize: 14),
+          ),
+          const Spacer(),
+          if (editing)
+            Row(
+              children: [
+                _SegmentButton(
+                  label: 'Male',
+                  isSelected: gender == 'Male',
+                  onTap: () => onChanged('Male'),
+                ),
+                const SizedBox(width: 8),
+                _SegmentButton(
+                  label: 'Female',
+                  isSelected: gender == 'Female',
+                  onTap: () => onChanged('Female'),
+                ),
+              ],
+            )
+          else
+            Text(
+              gender ?? '—',
+              style: TextStyle(
+                color: gender != null
+                    ? AppColors.onBackground
+                    : AppColors.onSurfaceMuted,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SegmentButton extends StatelessWidget {
+  const _SegmentButton({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : AppColors.surfaceVariant,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.surfaceVariant,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : AppColors.onSurfaceMuted,
+            fontSize: 13,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+          ),
+        ),
       ),
     );
   }
@@ -576,15 +889,15 @@ class _Initials extends StatelessWidget {
   final String initials;
   @override
   Widget build(BuildContext context) => Center(
-        child: Text(
-          initials,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      );
+    child: Text(
+      initials,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 30,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
 }
 
 // ── Shared components ─────────────────────────────────────────────────────
@@ -593,14 +906,14 @@ class _SectionHeader extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) => Text(
-        title.toUpperCase(),
-        style: const TextStyle(
-          color: AppColors.onSurfaceMuted,
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 1.2,
-        ),
-      );
+    title.toUpperCase(),
+    style: const TextStyle(
+      color: AppColors.onSurfaceMuted,
+      fontSize: 11,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 1.2,
+    ),
+  );
 }
 
 class _InfoCard extends StatelessWidget {
@@ -608,52 +921,15 @@ class _InfoCard extends StatelessWidget {
   final List<Widget> children;
   @override
   Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.surfaceVariant, width: 0.5),
-        ),
-        child: Column(children: children),
-      );
+    decoration: BoxDecoration(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: AppColors.surfaceVariant, width: 0.5),
+    ),
+    child: Column(children: children),
+  );
 }
 
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-  final IconData icon;
-  final String label;
-  final String value;
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
-            Icon(icon, size: 18, color: AppColors.onSurfaceMuted),
-            const SizedBox(width: 12),
-            Text(
-              label,
-              style: const TextStyle(color: AppColors.onSurface, fontSize: 14),
-            ),
-            const Spacer(),
-            Flexible(
-              child: Text(
-                value,
-                style: const TextStyle(
-                  color: AppColors.onBackground,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      );
-}
 
 class _ActionRow extends StatelessWidget {
   const _ActionRow({
@@ -666,40 +942,39 @@ class _ActionRow extends StatelessWidget {
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            children: [
-              Icon(icon, size: 18, color: AppColors.onSurfaceMuted),
-              const SizedBox(width: 12),
-              Text(
-                label,
-                style:
-                    const TextStyle(color: AppColors.onSurface, fontSize: 14),
-              ),
-              const Spacer(),
-              const Icon(
-                Icons.chevron_right_rounded,
-                size: 18,
-                color: AppColors.onSurfaceMuted,
-              ),
-            ],
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(16),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: AppColors.onSurfaceMuted),
+          const SizedBox(width: 12),
+          Text(
+            label,
+            style: const TextStyle(color: AppColors.onSurface, fontSize: 14),
           ),
-        ),
-      );
+          const Spacer(),
+          const Icon(
+            Icons.chevron_right_rounded,
+            size: 18,
+            color: AppColors.onSurfaceMuted,
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _Divider extends StatelessWidget {
   const _Divider();
   @override
   Widget build(BuildContext context) => const Divider(
-        height: 0,
-        thickness: 0.5,
-        color: AppColors.surfaceVariant,
-        indent: 46,
-      );
+    height: 0,
+    thickness: 0.5,
+    color: AppColors.surfaceVariant,
+    indent: 46,
+  );
 }
 
 class _SignOutButton extends StatelessWidget {
@@ -707,33 +982,33 @@ class _SignOutButton extends StatelessWidget {
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: AppColors.error.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: AppColors.error.withValues(alpha: 0.3),
-              width: 0.5,
+    onTap: onTap,
+    child: Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: AppColors.error.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: AppColors.error.withValues(alpha: 0.3),
+          width: 0.5,
+        ),
+      ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.logout_rounded, color: AppColors.error, size: 18),
+          SizedBox(width: 10),
+          Text(
+            'Sign Out',
+            style: TextStyle(
+              color: AppColors.error,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.logout_rounded, color: AppColors.error, size: 18),
-              SizedBox(width: 10),
-              Text(
-                'Sign Out',
-                style: TextStyle(
-                  color: AppColors.error,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }

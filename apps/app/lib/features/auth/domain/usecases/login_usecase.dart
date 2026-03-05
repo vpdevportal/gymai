@@ -5,7 +5,7 @@ import 'package:gymai/features/auth/domain/repositories/auth_repository.dart';
 
 class LoginUseCase {
   const LoginUseCase({required AuthRepository repository})
-      : _repository = repository;
+    : _repository = repository;
 
   final AuthRepository _repository;
 

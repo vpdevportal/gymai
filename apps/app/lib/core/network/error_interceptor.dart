@@ -9,13 +9,16 @@ class ErrorInterceptor extends Interceptor {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.connectionError:
-        throw const NetworkException(message: 'Connection timed out. Please try again.');
+        throw const NetworkException(
+          message: 'Connection timed out. Please try again.',
+        );
       case DioExceptionType.badResponse:
         final statusCode = err.response?.statusCode;
         final message =
-            (err.response?.data as Map<String, dynamic>?)?['message'] as String?
-                ?? err.message
-                ?? 'Server error';
+            (err.response?.data as Map<String, dynamic>?)?['message']
+                as String? ??
+            err.message ??
+            'Server error';
         if (statusCode == 401) {
           throw AuthException(message: message);
         }

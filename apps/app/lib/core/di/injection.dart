@@ -28,23 +28,18 @@ Future<void> configureDependencies() async {
         aOptions: AndroidOptions(encryptedSharedPreferences: true),
       ),
     )
-
-  // ── Firebase ───────────────────────────────────────────────────
+    // ── Firebase ───────────────────────────────────────────────────
     ..registerSingleton<firebase.FirebaseAuth>(firebase.FirebaseAuth.instance)
     ..registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance)
     ..registerSingleton<GoogleSignIn>(
       GoogleSignIn(scopes: ['email', 'profile']),
     )
-
-  // ── Network ────────────────────────────────────────────────────
+    // ── Network ────────────────────────────────────────────────────
     ..registerSingleton<AuthInterceptor>(
       AuthInterceptor(secureStorage: getIt()),
     )
-    ..registerSingleton<DioClient>(
-      DioClient(authInterceptor: getIt()),
-    )
-
-  // ── Data Sources ───────────────────────────────────────────────
+    ..registerSingleton<DioClient>(DioClient(authInterceptor: getIt()))
+    // ── Data Sources ───────────────────────────────────────────────
     ..registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(dio: getIt<DioClient>().dio),
     )
@@ -57,8 +52,7 @@ Future<void> configureDependencies() async {
     ..registerLazySingleton<FirestoreProfileDataSource>(
       () => FirestoreProfileDataSourceImpl(firestore: getIt()),
     )
-
-  // ── Repositories ───────────────────────────────────────────────
+    // ── Repositories ───────────────────────────────────────────────
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(
         remoteDataSource: getIt(),
@@ -68,10 +62,7 @@ Future<void> configureDependencies() async {
     ..registerLazySingleton<UserProfileRepository>(
       () => UserProfileRepositoryImpl(dataSource: getIt()),
     )
-
-  // ── Use Cases ──────────────────────────────────────────────────
+    // ── Use Cases ──────────────────────────────────────────────────
     ..registerLazySingleton(() => LoginUseCase(repository: getIt()))
-    ..registerLazySingleton(
-      () => SignInWithGoogleUseCase(repository: getIt()),
-    );
+    ..registerLazySingleton(() => SignInWithGoogleUseCase(repository: getIt()));
 }

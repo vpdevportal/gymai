@@ -10,7 +10,8 @@ sealed class Failure with _$Failure {
   }) = ServerFailure;
 
   const factory Failure.networkFailure({
-    @Default('No internet connection. Please check your network.') String message,
+    @Default('No internet connection. Please check your network.')
+    String message,
   }) = NetworkFailure;
 
   const factory Failure.cacheFailure({

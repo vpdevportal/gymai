@@ -5,11 +5,7 @@ import 'package:gymai/main.dart';
 
 void main() {
   testWidgets('App renders without errors', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const ProviderScope(
-        child: GymAIApp(),
-      ),
-    );
+    await tester.pumpWidget(const ProviderScope(child: GymAIApp()));
     expect(find.byType(MaterialApp), findsNothing); // uses MaterialApp.router
     expect(find.byType(Router), findsOneWidget);
   });

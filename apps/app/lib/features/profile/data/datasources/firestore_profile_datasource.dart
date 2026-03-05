@@ -9,7 +9,7 @@ abstract class FirestoreProfileDataSource {
 
 class FirestoreProfileDataSourceImpl implements FirestoreProfileDataSource {
   const FirestoreProfileDataSourceImpl({required FirebaseFirestore firestore})
-      : _firestore = firestore;
+    : _firestore = firestore;
 
   final FirebaseFirestore _firestore;
 

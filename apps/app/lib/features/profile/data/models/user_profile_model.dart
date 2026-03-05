@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gymai/features/profile/domain/entities/activity_level.dart';
 import 'package:gymai/features/profile/domain/entities/user_profile.dart';
 
 part 'user_profile_model.freezed.dart';
@@ -20,25 +21,32 @@ abstract class UserProfileModel with _$UserProfileModel {
     required String userId,
     double? height,
     double? weight,
-    @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) DateTime? dateOfBirth,
+    @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson)
+    DateTime? dateOfBirth,
+    String? gender,
+    ActivityLevel? activityLevel,
   }) = _UserProfileModel;
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       _$UserProfileModelFromJson(json);
 
   factory UserProfileModel.fromDomain(UserProfile profile) => UserProfileModel(
-        userId: profile.userId,
-        height: profile.height,
-        weight: profile.weight,
-        dateOfBirth: profile.dateOfBirth,
-      );
+    userId: profile.userId,
+    height: profile.height,
+    weight: profile.weight,
+    dateOfBirth: profile.dateOfBirth,
+    gender: profile.gender,
+    activityLevel: profile.activityLevel,
+  );
 
   const UserProfileModel._();
 
   UserProfile toDomain() => UserProfile(
-        userId: userId,
-        height: height,
-        weight: weight,
-        dateOfBirth: dateOfBirth,
-      );
+    userId: userId,
+    height: height,
+    weight: weight,
+    dateOfBirth: dateOfBirth,
+    gender: gender,
+    activityLevel: activityLevel,
+  );
 }

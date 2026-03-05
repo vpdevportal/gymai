@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserProfile {
 
- String get userId; double? get height; double? get weight; DateTime? get dateOfBirth;
+ String get userId; double? get height; double? get weight; DateTime? get dateOfBirth; String? get gender; ActivityLevel? get activityLevel;
 /// Create a copy of UserProfile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UserProfileCopyWith<UserProfile> get copyWith => _$UserProfileCopyWithImpl<User
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfile&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfile&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.activityLevel, activityLevel) || other.activityLevel == activityLevel));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,height,weight,dateOfBirth);
+int get hashCode => Object.hash(runtimeType,userId,height,weight,dateOfBirth,gender,activityLevel);
 
 @override
 String toString() {
-  return 'UserProfile(userId: $userId, height: $height, weight: $weight, dateOfBirth: $dateOfBirth)';
+  return 'UserProfile(userId: $userId, height: $height, weight: $weight, dateOfBirth: $dateOfBirth, gender: $gender, activityLevel: $activityLevel)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $UserProfileCopyWith<$Res>  {
   factory $UserProfileCopyWith(UserProfile value, $Res Function(UserProfile) _then) = _$UserProfileCopyWithImpl;
 @useResult
 $Res call({
- String userId, double? height, double? weight, DateTime? dateOfBirth
+ String userId, double? height, double? weight, DateTime? dateOfBirth, String? gender, ActivityLevel? activityLevel
 });
 
 
@@ -62,13 +62,15 @@ class _$UserProfileCopyWithImpl<$Res>
 
 /// Create a copy of UserProfile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? height = freezed,Object? weight = freezed,Object? dateOfBirth = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? height = freezed,Object? weight = freezed,Object? dateOfBirth = freezed,Object? gender = freezed,Object? activityLevel = freezed,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,height: freezed == height ? _self.height : height // ignore: cast_nullable_to_non_nullable
 as double?,weight: freezed == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
 as double?,dateOfBirth: freezed == dateOfBirth ? _self.dateOfBirth : dateOfBirth // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,gender: freezed == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
+as String?,activityLevel: freezed == activityLevel ? _self.activityLevel : activityLevel // ignore: cast_nullable_to_non_nullable
+as ActivityLevel?,
   ));
 }
 
@@ -153,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  double? height,  double? weight,  DateTime? dateOfBirth)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  double? height,  double? weight,  DateTime? dateOfBirth,  String? gender,  ActivityLevel? activityLevel)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserProfile() when $default != null:
-return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _:
+return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth,_that.gender,_that.activityLevel);case _:
   return orElse();
 
 }
@@ -174,10 +176,10 @@ return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  double? height,  double? weight,  DateTime? dateOfBirth)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  double? height,  double? weight,  DateTime? dateOfBirth,  String? gender,  ActivityLevel? activityLevel)  $default,) {final _that = this;
 switch (_that) {
 case _UserProfile():
-return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _:
+return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth,_that.gender,_that.activityLevel);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +196,10 @@ return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  double? height,  double? weight,  DateTime? dateOfBirth)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  double? height,  double? weight,  DateTime? dateOfBirth,  String? gender,  ActivityLevel? activityLevel)?  $default,) {final _that = this;
 switch (_that) {
 case _UserProfile() when $default != null:
-return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _:
+return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth,_that.gender,_that.activityLevel);case _:
   return null;
 
 }
@@ -209,13 +211,15 @@ return $default(_that.userId,_that.height,_that.weight,_that.dateOfBirth);case _
 
 
 class _UserProfile implements UserProfile {
-  const _UserProfile({required this.userId, this.height, this.weight, this.dateOfBirth});
+  const _UserProfile({required this.userId, this.height, this.weight, this.dateOfBirth, this.gender, this.activityLevel});
   
 
 @override final  String userId;
 @override final  double? height;
 @override final  double? weight;
 @override final  DateTime? dateOfBirth;
+@override final  String? gender;
+@override final  ActivityLevel? activityLevel;
 
 /// Create a copy of UserProfile
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +231,16 @@ _$UserProfileCopyWith<_UserProfile> get copyWith => __$UserProfileCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfile&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfile&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.dateOfBirth, dateOfBirth) || other.dateOfBirth == dateOfBirth)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.activityLevel, activityLevel) || other.activityLevel == activityLevel));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,height,weight,dateOfBirth);
+int get hashCode => Object.hash(runtimeType,userId,height,weight,dateOfBirth,gender,activityLevel);
 
 @override
 String toString() {
-  return 'UserProfile(userId: $userId, height: $height, weight: $weight, dateOfBirth: $dateOfBirth)';
+  return 'UserProfile(userId: $userId, height: $height, weight: $weight, dateOfBirth: $dateOfBirth, gender: $gender, activityLevel: $activityLevel)';
 }
 
 
@@ -247,7 +251,7 @@ abstract mixin class _$UserProfileCopyWith<$Res> implements $UserProfileCopyWith
   factory _$UserProfileCopyWith(_UserProfile value, $Res Function(_UserProfile) _then) = __$UserProfileCopyWithImpl;
 @override @useResult
 $Res call({
- String userId, double? height, double? weight, DateTime? dateOfBirth
+ String userId, double? height, double? weight, DateTime? dateOfBirth, String? gender, ActivityLevel? activityLevel
 });
 
 
@@ -264,13 +268,15 @@ class __$UserProfileCopyWithImpl<$Res>
 
 /// Create a copy of UserProfile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? height = freezed,Object? weight = freezed,Object? dateOfBirth = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? height = freezed,Object? weight = freezed,Object? dateOfBirth = freezed,Object? gender = freezed,Object? activityLevel = freezed,}) {
   return _then(_UserProfile(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,height: freezed == height ? _self.height : height // ignore: cast_nullable_to_non_nullable
 as double?,weight: freezed == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
 as double?,dateOfBirth: freezed == dateOfBirth ? _self.dateOfBirth : dateOfBirth // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,gender: freezed == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
+as String?,activityLevel: freezed == activityLevel ? _self.activityLevel : activityLevel // ignore: cast_nullable_to_non_nullable
+as ActivityLevel?,
   ));
 }
 
