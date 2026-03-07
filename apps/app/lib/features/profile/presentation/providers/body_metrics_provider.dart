@@ -40,7 +40,7 @@ class BodyMetrics {
   /// Calculated BMR (Basal Metabolic Rate) using Mifflin-St Jeor Equation
   int? get bmr {
     if (weight == null || height == null || age == null || gender == null) return null;
-    double base = (10 * weight!) + (6.25 * height!) - (5 * age!);
+    final base = (10 * weight!) + (6.25 * height!) - (5 * age!);
     if (gender == 'Male') {
       return (base + 5).round();
     } else {

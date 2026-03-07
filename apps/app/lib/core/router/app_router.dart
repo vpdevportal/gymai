@@ -7,6 +7,8 @@ import 'package:gymai/features/dashboard/presentation/screens/dashboard_screen.d
 import 'package:gymai/features/diary/presentation/screens/diary_screen.dart';
 import 'package:gymai/features/profile/presentation/screens/profile_screen.dart';
 
+import 'package:gymai/features/workout/presentation/screens/workout_screen.dart';
+
 part 'app_routes.dart';
 
 final appRouter = GoRouter(
@@ -52,6 +54,13 @@ final appRouter = GoRouter(
               path: AppRoutes.dashboard,
               name: AppRoutes.dashboardName,
               builder: (context, state) => const DashboardScreen(),
+              routes: [
+                GoRoute(
+                  path: 'workout', // Note: relative path without leading slash
+                  name: AppRoutes.workoutName,
+                  builder: (context, state) => const WorkoutScreen(),
+                ),
+              ],
             ),
           ],
         ),

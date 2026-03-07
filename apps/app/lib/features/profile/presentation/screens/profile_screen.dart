@@ -447,7 +447,7 @@ class _MetricsCard extends StatelessWidget {
 
               int? bmr;
               if (currentWeight != null && currentHeight != null && currentAge != null && currentGender != null) {
-                double base = (10 * currentWeight) + (6.25 * currentHeight) - (5 * currentAge);
+                final base = (10 * currentWeight) + (6.25 * currentHeight) - (5 * currentAge);
                 bmr = currentGender == 'Male' ? (base + 5).round() : (base - 161).round();
               }
 
